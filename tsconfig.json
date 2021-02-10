@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "preserveConstEnums": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "target": "ES2015",
+    "resolveJsonModule": true
+  },
+  "include": ["bin/**/*.ts", "utils/**/*.ts"],
+  "exclude": ["node_modules"]
+}
