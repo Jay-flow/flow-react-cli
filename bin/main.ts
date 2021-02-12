@@ -65,11 +65,11 @@ function nameTheComponent() {
 }
 
 function createComponent(nameOfComponent: string) {
-  
+  console.log(fs.existsSync("templates/FunctionalComponent.tsx"))
 }
 
 function selectTheNameOfTheComponent() {
-  list.on("select", (ontions) => {
+  list.on("select", (options) => {
     shell.echo(chalk.yellow("select the name of the component."))
     nameTheComponent()
   })

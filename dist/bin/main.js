@@ -11,6 +11,7 @@ const package_json_1 = __importDefault(require("../package.json"));
 const select_shell_1 = __importDefault(require("select-shell"));
 const chalk_1 = __importDefault(require("chalk"));
 const inquirer_1 = __importDefault(require("inquirer"));
+const fs_1 = __importDefault(require("fs"));
 const welcome = `
 ███████╗██╗░░░░░░█████╗░░██╗░░░░░░░██╗░░░░░░██████╗░███████╗░█████╗░░█████╗░████████╗░░░░░░░█████╗░██╗░░░░░██╗
 ██╔════╝██║░░░░░██╔══██╗░██║░░██╗░░██║░░░░░░██╔══██╗██╔════╝██╔══██╗██╔══██╗╚══██╔══╝░░░░░░██╔══██╗██║░░░░░██║
@@ -64,9 +65,10 @@ function nameTheComponent() {
     });
 }
 function createComponent(nameOfComponent) {
+    console.log(fs_1.default.existsSync("templates/FunctionalComponent.tsx"));
 }
 function selectTheNameOfTheComponent() {
-    list.on("select", (ontions) => {
+    list.on("select", (options) => {
         shelljs_1.default.echo(chalk_1.default.yellow("select the name of the component."));
         nameTheComponent();
     });
