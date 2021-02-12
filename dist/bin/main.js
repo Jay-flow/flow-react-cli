@@ -10,7 +10,7 @@ const commander_1 = __importDefault(require("commander"));
 const package_json_1 = __importDefault(require("../package.json"));
 const select_shell_1 = __importDefault(require("select-shell"));
 const chalk_1 = __importDefault(require("chalk"));
-const inquirer = require("inquirer");
+const inquirer_1 = __importDefault(require("inquirer"));
 const welcome = `
 ███████╗██╗░░░░░░█████╗░░██╗░░░░░░░██╗░░░░░░██████╗░███████╗░█████╗░░█████╗░████████╗░░░░░░░█████╗░██╗░░░░░██╗
 ██╔════╝██║░░░░░██╔══██╗░██║░░██╗░░██║░░░░░░██╔══██╗██╔════╝██╔══██╗██╔══██╗╚══██╔══╝░░░░░░██╔══██╗██║░░░░░██║
@@ -48,7 +48,7 @@ function isValidateComponentNaming(name) {
     return true;
 }
 function nameTheComponent() {
-    inquirer
+    inquirer_1.default
         .prompt([
         {
             name: "value",
@@ -60,7 +60,10 @@ function nameTheComponent() {
         if (!isValidateComponentNaming(nameOfComponent)) {
             nameTheComponent();
         }
+        createComponent(nameOfComponent);
     });
+}
+function createComponent(nameOfComponent) {
 }
 function selectTheNameOfTheComponent() {
     list.on("select", (ontions) => {

@@ -5,7 +5,9 @@ import program from "commander"
 import pkg from "../package.json"
 import selectShell from "select-shell"
 import chalk from "chalk"
-import inquirer = require("inquirer")
+import inquirer from "inquirer"
+import fs from "fs"
+import path from "path"
 
 const welcome = `
 ███████╗██╗░░░░░░█████╗░░██╗░░░░░░░██╗░░░░░░██████╗░███████╗░█████╗░░█████╗░████████╗░░░░░░░█████╗░██╗░░░░░██╗
@@ -58,7 +60,12 @@ function nameTheComponent() {
       if (!isValidateComponentNaming(nameOfComponent)) {
         nameTheComponent()
       }
+      createComponent(nameOfComponent)
     })
+}
+
+function createComponent(nameOfComponent: string) {
+  
 }
 
 function selectTheNameOfTheComponent() {
