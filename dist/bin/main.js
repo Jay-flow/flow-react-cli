@@ -1,5 +1,14 @@
 #! /usr/bin/env node
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -38,35 +47,34 @@ const list = select_shell_1.default({
 });
 function isValidateComponentNaming(name) {
     if (!name) {
-        shelljs_1.default.echo(chalk_1.default.redBright("please provide name of your component."));
+        shelljs_1.default.echo(chalk_1.default.redBright("Please provide name of your component."));
         return false;
     }
     else if (!/^[a-z0-9]+$/i.test(name)) {
-        shelljs_1.default.echo(chalk_1.default.redBright("component name should be alphaNumeric."));
+        shelljs_1.default.echo(chalk_1.default.redBright("Component name should be alphaNumeric."));
         return false;
     }
     return true;
 }
 function nameTheComponent() {
-    inquirer
-        .prompt([
-        {
-            name: "value",
-            message: "name of your component (alphaNumeric): "
-        }
-    ])
-        .then((answer) => {
-        const nameOfComponent = answer.value;
-        if (!isValidateComponentNaming(nameOfComponent)) {
-            nameTheComponent();
-        }
+    return __awaiter(this, void 0, void 0, function* () {
+        return inquirer.prompt([
+            {
+                name: "value",
+                message: "Name of your component (alphaNumeric): "
+            }
+        ]);
     });
 }
 function selectTheNameOfTheComponent() {
-    list.on("select", (ontions) => {
-        shelljs_1.default.echo(chalk_1.default.yellow("select the name of the component."));
-        nameTheComponent();
-    });
+    list.on("select", (ontions) => __awaiter(this, void 0, void 0, function* () {
+        shelljs_1.default.echo(chalk_1.default.yellow("Select the name of the component."));
+        const answer = yield nameTheComponent();
+        const nameOfComponent = answer.value;
+        if (!isValidateComponentNaming(nameOfComponent)) {
+            return process.exit(0);
+        }
+    }));
 }
 commander_1.default
     .version(package_json_1.default.version)

@@ -36,35 +36,32 @@ const list = selectShell({
 
 function isValidateComponentNaming(name: string) {
   if (!name) {
-    shell.echo(chalk.redBright("please provide name of your component."))
+    shell.echo(chalk.redBright("Please provide name of your component."))
     return false
   } else if (!/^[a-z0-9]+$/i.test(name)) {
-    shell.echo(chalk.redBright("component name should be alphaNumeric."))
+    shell.echo(chalk.redBright("Component name should be alphaNumeric."))
     return false
   }
   return true
 }
 
-function nameTheComponent() {
-  inquirer
-    .prompt([
-      {
-        name: "value",
-        message: "name of your component (alphaNumeric): "
-      }
-    ])
-    .then((answer) => {
-      const nameOfComponent = answer.value
-      if (!isValidateComponentNaming(nameOfComponent)) {
-        nameTheComponent()
-      }
-    })
+async function nameTheComponent() {
+  return inquirer.prompt([
+    {
+      name: "value",
+      message: "Name of your component (alphaNumeric): "
+    }
+  ])
 }
 
 function selectTheNameOfTheComponent() {
-  list.on("select", (ontions) => {
-    shell.echo(chalk.yellow("select the name of the component."))
-    nameTheComponent()
+  list.on("select", async (ontions) => {
+    shell.echo(chalk.yellow("Select the name of the component."))
+    const answer = await nameTheComponent()
+    const nameOfComponent = answer.value
+    if (!isValidateComponentNaming(nameOfComponent)) {
+      return process.exit(0)
+    }
   })
 }
 
