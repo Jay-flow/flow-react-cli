@@ -5,7 +5,9 @@ import program from "commander"
 import pkg from "../package.json"
 import selectShell from "select-shell"
 import chalk from "chalk"
-import inquirer = require("inquirer")
+import inquirer from "inquirer"
+import fs from "fs"
+import path from "path"
 
 const welcome = `
 ███████╗██╗░░░░░░█████╗░░██╗░░░░░░░██╗░░░░░░██████╗░███████╗░█████╗░░█████╗░████████╗░░░░░░░█████╗░██╗░░░░░██╗
@@ -52,6 +54,10 @@ async function nameTheComponent() {
       message: "Name of your component (alphaNumeric): "
     }
   ])
+}
+
+function createComponent(nameOfComponent: string) {
+  console.log(fs.existsSync("templates/FunctionalComponent.tsx"))
 }
 
 function selectTheNameOfTheComponent() {

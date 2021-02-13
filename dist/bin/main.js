@@ -19,7 +19,8 @@ const commander_1 = __importDefault(require("commander"));
 const package_json_1 = __importDefault(require("../package.json"));
 const select_shell_1 = __importDefault(require("select-shell"));
 const chalk_1 = __importDefault(require("chalk"));
-const inquirer = require("inquirer");
+const inquirer_1 = __importDefault(require("inquirer"));
+const fs_1 = __importDefault(require("fs"));
 const welcome = `
 ███████╗██╗░░░░░░█████╗░░██╗░░░░░░░██╗░░░░░░██████╗░███████╗░█████╗░░█████╗░████████╗░░░░░░░█████╗░██╗░░░░░██╗
 ██╔════╝██║░░░░░██╔══██╗░██║░░██╗░░██║░░░░░░██╔══██╗██╔════╝██╔══██╗██╔══██╗╚══██╔══╝░░░░░░██╔══██╗██║░░░░░██║
@@ -58,13 +59,16 @@ function isValidateComponentNaming(name) {
 }
 function nameTheComponent() {
     return __awaiter(this, void 0, void 0, function* () {
-        return inquirer.prompt([
+        return inquirer_1.default.prompt([
             {
                 name: "value",
                 message: "Name of your component (alphaNumeric): "
             }
         ]);
     });
+}
+function createComponent(nameOfComponent) {
+    console.log(fs_1.default.existsSync("templates/FunctionalComponent.tsx"));
 }
 function selectTheNameOfTheComponent() {
     list.on("select", (ontions) => __awaiter(this, void 0, void 0, function* () {
