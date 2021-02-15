@@ -58,28 +58,29 @@ async function nameTheComponent() {
   ])
 }
 
-function createReactApp(nameOfApp: string, spinner: ora.Ora, answer: any) {
+function createReactApp(nameOfApp: string, answer: any) {
+  const gitDownSpinner = ora("Creating React app: " + nameOfApp + "...\n")
+  gitDownSpinner.start()
   const gitURL = "-b main https://github.com/Jay-flow/flow-react-ts.git"
-  shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) =>
-    flowUp(code, stdout, stderr, nameOfApp, spinner, answer)
-  )
+  shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
+    gitDownSpinner.stop()
+    flowUp(code, stdout, stderr, nameOfApp, answer)
+  })
 }
 
-function createNextApp(nameOfApp: string, spinner: ora.Ora, answer: any) {
+function createNextApp(nameOfApp: string, answer: any) {
+  const gitDownSpinner = ora("Creating Next app: " + nameOfApp + "...\n")
+  gitDownSpinner.start()
   const gitURL = "-b main https://github.com/Jay-flow/flow-next-ts.git"
-  shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) =>
-    flowUp(code, stdout, stderr, nameOfApp, spinner, answer)
-  )
+  shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
+    gitDownSpinner.stop()
+    flowUp(code, stdout, stderr, nameOfApp, answer)
+  })
 }
 
-function flowUp(
-  code: number,
-  stdout: string,
-  stderr: string,
-  nameOfApp: string,
-  spinner: ora.Ora,
-  answer: any
-) {
+function flowUp(code: number, stdout: string, stderr: string, nameOfApp: string, answer: any) {
+  const projectCleanupSpinner = ora("Project Cleanup...\n")
+  projectCleanupSpinner.start()
   if (code !== 0) {
     shell.echo(chalk.cyanBright(`code: ${code}`))
     shell.echo(chalk.cyanBright(`Program output: ${stdout}`))
@@ -90,11 +91,11 @@ function flowUp(
     shell.sed("-i", "flow-react-ts", camelCaseToDash(`${nameOfApp}`), `./${nameOfApp}/package.json`)
 
     shell.rm("-rf", `${nameOfApp}/.git`)
+    projectCleanupSpinner.stop()
 
     shell.echo(chalk.greenBright(answer.value + " created."))
-    shell.echo(chalk.greenBright("cd " + answer.value + " and npm run start."))
+    shell.echo(chalk.greenBright("cd " + answer.value + " and npm install and npm run dev."))
 
-    spinner.stop()
     process.exit(0)
   }, 2000)
 }
@@ -113,15 +114,12 @@ function selectTheNameOfTheApp() {
     if (!isValidateComponentNaming(nameOfApp)) {
       return process.exit(0)
     }
-
-    const spinner = ora("Creating app " + nameOfApp + "...\n")
-    spinner.start()
     switch (options[0].value) {
       case TYPE_OF_APP.REACT:
-        createReactApp(nameOfApp, spinner, answer)
+        createReactApp(nameOfApp, answer)
         break
       case TYPE_OF_APP.NEXT:
-        createNextApp(nameOfApp, spinner, answer)
+        createNextApp(nameOfApp, answer)
         break
       default:
         invalidProgramInput()

@@ -1,18 +1,29 @@
 {
-  "name": "jay-flow-react-cli",
-  "version": "1.0.0",
-  "description": "",
+  "name": "flow-react-cli",
+  "version": "1.0.1",
+  "description": "Create React app & boilerplate",
   "bin": {
     "flow": "dist/bin/main.js"
   },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
     "dev:tsc": "tsc -w",
-    "dev": "node ./dist/bin/main.js init"
+    "dev": "node ./dist/bin/main.js init",
+    "build": "shx rm -rf dist/ && npm run tsc",
+    "deploy": "npm run build && npm publish"
   },
-  "author": "",
+  "author": "Jay-flow",
   "license": "ISC",
+  "keywords": [
+    "react",
+    "next",
+    "cli",
+    "template",
+    "boilerplate",
+    "typescript"
+  ],
   "dependencies": {
     "chalk": "^4.1.0",
     "commander": "^7.0.0",
@@ -30,6 +41,14 @@
     "eslint-config-prettier": "^7.2.0",
     "nodemon": "^2.0.7",
     "prettier": "2.2.1",
+    "shx": "^0.3.3",
     "typescript": "^4.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jay-flow/flow-react-cli.git"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
