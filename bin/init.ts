@@ -13,6 +13,10 @@ enum TYPE_OF_APP {
   NEXT = 2
 }
 
+enum TYPE_OF_STYLE {
+  TAILWIND = 1
+}
+
 const welcome = `
 ███████╗██╗░░░░░░█████╗░░██╗░░░░░░░██╗░░░░░░██████╗░███████╗░█████╗░░█████╗░████████╗░░░░░░░█████╗░██╗░░░░░██╗
 ██╔════╝██║░░░░░██╔══██╗░██║░░██╗░░██║░░░░░░██╔══██╗██╔════╝██╔══██╗██╔══██╗╚══██╔══╝░░░░░░██╔══██╗██║░░░░░██║
@@ -49,7 +53,7 @@ function isValidateComponentNaming(name: string) {
   return true
 }
 
-async function nameTheComponent() {
+async function nameTheApp() {
   return inquirer.prompt([
     {
       name: "value",
@@ -58,27 +62,27 @@ async function nameTheComponent() {
   ])
 }
 
-function createReactApp(nameOfApp: string, answer: any) {
+function createReactApp(nameOfApp: string) {
   const gitDownSpinner = ora("Creating React app: " + nameOfApp + "...\n")
   gitDownSpinner.start()
   const gitURL = "-b main https://github.com/Jay-flow/flow-react-ts.git"
   shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
     gitDownSpinner.stop()
-    flowUp(code, stdout, stderr, nameOfApp, answer)
+    flowUp(code, stdout, stderr, nameOfApp)
   })
 }
 
-function createNextApp(nameOfApp: string, answer: any) {
+function createNextApp(nameOfApp: string) {
   const gitDownSpinner = ora("Creating Next app: " + nameOfApp + "...\n")
   gitDownSpinner.start()
   const gitURL = "-b main https://github.com/Jay-flow/flow-next-ts.git"
   shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
     gitDownSpinner.stop()
-    flowUp(code, stdout, stderr, nameOfApp, answer)
+    flowUp(code, stdout, stderr, nameOfApp)
   })
 }
 
-function flowUp(code: number, stdout: string, stderr: string, nameOfApp: string, answer: any) {
+function flowUp(code: number, stdout: string, stderr: string, nameOfApp: string) {
   const projectCleanupSpinner = ora("Project Cleanup...\n")
   projectCleanupSpinner.start()
   if (code !== 0) {
@@ -93,8 +97,8 @@ function flowUp(code: number, stdout: string, stderr: string, nameOfApp: string,
     shell.rm("-rf", `${nameOfApp}/.git`)
     projectCleanupSpinner.stop()
 
-    shell.echo(chalk.greenBright(answer.value + " created."))
-    shell.echo(chalk.greenBright("cd " + answer.value + " and npm install and npm run dev."))
+    shell.echo(chalk.greenBright(nameOfApp + " created."))
+    shell.echo(chalk.greenBright("cd " + nameOfApp + " and npm install and npm run dev."))
 
     process.exit(0)
   }, 2000)
@@ -109,17 +113,17 @@ function invalidProgramInput() {
 function selectTheNameOfTheApp() {
   list.on("select", async (options) => {
     shell.echo(chalk.yellow("Select the name of the app."))
-    const answer = await nameTheComponent()
-    const nameOfApp = answer.value
+    const appName = await nameTheApp()
+    const nameOfApp = appName.value
     if (!isValidateComponentNaming(nameOfApp)) {
       return process.exit(0)
     }
     switch (options[0].value) {
       case TYPE_OF_APP.REACT:
-        createReactApp(nameOfApp, answer)
+        createReactApp(nameOfApp)
         break
       case TYPE_OF_APP.NEXT:
-        createNextApp(nameOfApp, answer)
+        createNextApp(nameOfApp)
         break
       default:
         invalidProgramInput()
