@@ -14,7 +14,8 @@ enum TYPE_OF_APP {
 }
 
 enum TYPE_OF_STYLE {
-  TAILWIND = 1
+  TAILWIND = "Tailwind CSS",
+  STYLED_COMPONENTS = "styled-components"
 }
 
 const welcome = `
@@ -63,20 +64,34 @@ async function nameTheApp() {
   ])
 }
 
-function createReactApp(nameOfApp: string) {
-  const gitDownSpinner = ora("Creating React app: " + nameOfApp + "...\n")
-  gitDownSpinner.start()
-  const gitURL = "-b main https://github.com/Jay-flow/flow-react-ts.git"
-  shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
-    gitDownSpinner.stop()
-    flowUp(code, stdout, stderr, nameOfApp)
-  })
+
+async function selectStyle() {
+  return inquirer.prompt([
+    {
+      name: "value",
+      type: "list",
+      choices: [
+        TYPE_OF_STYLE.TAILWIND,
+        TYPE_OF_STYLE.STYLED_COMPONENTS,
+      ],
+      message: "Select the CSS you want: "
+    }
+  ])
 }
 
-function createNextApp(nameOfApp: string) {
-  const gitDownSpinner = ora("Creating Next app: " + nameOfApp + "...\n")
+async function isWantStyle() {
+  return inquirer.prompt([
+    {
+      name: "value",
+      type: "confirm",
+      message: "Do you want to install the CSS library?"
+    }
+  ])
+}
+
+function createApp(gitURL: string, nameOfApp: string) {
+  const gitDownSpinner = ora("Creating app: " + nameOfApp + "...\n")
   gitDownSpinner.start()
-  const gitURL = "-b main https://github.com/Jay-flow/flow-next-ts.git"
   shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
     gitDownSpinner.stop()
     flowUp(code, stdout, stderr, nameOfApp)
@@ -106,29 +121,43 @@ function flowUp(code: number, stdout: string, stderr: string, nameOfApp: string)
 }
 
 function invalidProgramInput() {
-  shell.echo(chalk.redBright("There is no template for current choice. Please try again."))
-
+  shell.echo(chalk.redBright("There is no app for current choice. Please try again."))
   process.exit(0)
+}
+
+function getGitURL(selectValue: number, style: string): string {
+  let branch = "main"
+  if(style === TYPE_OF_STYLE.STYLED_COMPONENTS) {
+    branch = "styled-components"
+  } else if (style === TYPE_OF_STYLE.TAILWIND) {
+    branch = "tailwind-css"
+  }
+  switch (selectValue) {
+    case TYPE_OF_APP.REACT:
+      return `-b ${branch} https://github.com/Jay-flow/flow-react-ts.git`
+    case TYPE_OF_APP.NEXT:
+      return `-b ${branch} https://github.com/Jay-flow/flow-next-ts.git`
+    default:
+      invalidProgramInput()
+  }
 }
 
 function selectTheNameOfTheApp() {
   appList.on("select", async (options) => {
+    const isStyle = await isWantStyle()
+    let style = null
+    if(isStyle.value) {
+      const selectStyleLibrary = await selectStyle()
+      style = selectStyleLibrary.value
+    }
     shell.echo(chalk.yellow("Select the name of the app."))
     const appName = await nameTheApp()
     const nameOfApp = appName.value
     if (!isValidateComponentNaming(nameOfApp)) {
       return process.exit(0)
     }
-    switch (options[0].value) {
-      case TYPE_OF_APP.REACT:
-        createReactApp(nameOfApp)
-        break
-      case TYPE_OF_APP.NEXT:
-        createNextApp(nameOfApp)
-        break
-      default:
-        invalidProgramInput()
-    }
+    const gitURL = getGitURL(options[0].value, style)
+    createApp(gitURL, nameOfApp)
   })
 }
 
@@ -157,7 +186,7 @@ const init = () => {
 
       showSelectAppList()
       selectTheNameOfTheApp()
-      // cancelEventHandling()
+      cancelEventHandling()
     })
 }
 
