@@ -1,9 +1,6 @@
 'use strict';
 
-import chalk from 'chalk';
 import shelljs = require('shelljs');
-import fs = require('fs');
-
 import path = require('path');
 
 export interface TemplateType {
@@ -49,36 +46,6 @@ export const resolveComponent = (
   };
 };
 
-export const exitIfNotDoobooRepo = async (): Promise<void> => {
-  const exists = fs.existsSync('.dooboo');
-
-  if (!exists) {
-    shelljs.echo(
-      chalk.redBright(
-        '\nproject is not compatible with dooboo-cli v5. Are you sure you are in correct dir?',
-      ),
-    );
-
-    process.exit(0);
-  }
-};
-
-export const exitIfNotV5 = async (): Promise<void> => {
-  const exists = fs.existsSync('.dooboo/v5');
-
-  if (!exists) {
-    shelljs.echo(
-      chalk.redBright(
-        `\nproject is not compatible with dooboo-cli v5.
-        Maybe you are using older projects.
-        Then please install version lower than dooboo-cli@5`,
-      ),
-    );
-
-    process.exit(0);
-  }
-};
-
 export const toCamelCase = (str: string, cap1st: boolean): string => {
   return ((cap1st ? '-' : '') + str).replace(/-+([^-])/g, (a, b) => {
     return b.toUpperCase();
@@ -90,8 +57,8 @@ export const isCamelCase = (str: string): boolean => {
   else return false;
 };
 
-export const camelCaseToDash = (str: string): string => {
-  return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
+export const AppNameToNodePackageName = (str: string): string => {
+  return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').replace('_', '-').toLowerCase();
 };
 
 export const camelize = (str: string): string => {

@@ -5,7 +5,7 @@ import chalk from "chalk"
 import inquirer from "inquirer"
 import selectShell from "select-shell"
 import ora from "ora"
-import { camelCaseToDash } from "../utils/functions"
+import { AppNameToNodePackageName } from "../utils/functions"
 import fs from "fs"
 
 enum TYPE_OF_APP {
@@ -45,8 +45,8 @@ function isValidateComponentNaming(name: string) {
   if (!name) {
     shell.echo(chalk.redBright("Please provide name of your app."))
     return false
-  } else if (!/^[a-z0-9]+$/i.test(name)) {
-    shell.echo(chalk.redBright("App name should be alphaNumeric."))
+  } else if (!/^[a-z0-9\-_]+$/i.test(name)) {
+    shell.echo(chalk.redBright("App name cannot contain special symbols."))
     return false
   } else if (fs.existsSync(`./${name}`)) {
     shell.echo(chalk.redBright("App name with the same name already exists."))
@@ -59,7 +59,7 @@ async function nameTheApp() {
   return inquirer.prompt([
     {
       name: "value",
-      message: "Name of your app (alphaNumeric): "
+      message: "Name of your app:"
     }
   ])
 }
@@ -89,33 +89,36 @@ async function isWantStyle() {
   ])
 }
 
-function createApp(gitURL: string, nameOfApp: string) {
+function createApp(gitURL: string, nameOfApp: string, defaultNodePackageName: string) {
   const gitDownSpinner = ora("Creating app: " + nameOfApp + "...\n")
   gitDownSpinner.start()
   shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
     gitDownSpinner.stop()
-    flowUp(code, stdout, stderr, nameOfApp)
+    if (code !== 0) {
+      shell.echo(chalk.cyanBright(`code: ${code}`))
+      shell.echo(chalk.cyanBright(`Program output: ${stdout}`))
+      shell.echo(chalk.cyanBright(`Program stderr: ${stderr}`))
+    }
+    flowUp(nameOfApp, defaultNodePackageName)
   })
 }
 
-function flowUp(code: number, stdout: string, stderr: string, nameOfApp: string) {
+function flowUp(nameOfApp: string, defaultNodePackageName: string) {
   const projectCleanupSpinner = ora("Project Cleanup...\n")
   projectCleanupSpinner.start()
-  if (code !== 0) {
-    shell.echo(chalk.cyanBright(`code: ${code}`))
-    shell.echo(chalk.cyanBright(`Program output: ${stdout}`))
-    shell.echo(chalk.cyanBright(`Program stderr: ${stderr}`))
-  }
+  
 
   setTimeout(() => {
-    shell.sed("-i", "flow-react-ts", camelCaseToDash(`${nameOfApp}`), `./${nameOfApp}/package.json`)
-
+    shell.sed("-i", defaultNodePackageName, AppNameToNodePackageName(`${nameOfApp}`), `./${nameOfApp}/package.json`)
     shell.rm("-rf", `${nameOfApp}/.git`)
     projectCleanupSpinner.stop()
 
-    shell.echo(chalk.greenBright(nameOfApp + " created."))
-    shell.echo(chalk.greenBright("cd " + nameOfApp + " and npm install and npm run dev."))
+    const npmInstallSpinner = ora("npm install...just a moment, please.\n").start()
+    shell.cd(nameOfApp)
+    shell.exec("npm install")
+    npmInstallSpinner.stop()
 
+    shell.echo(chalk.greenBright(nameOfApp + " created."))
     process.exit(0)
   }, 2000)
 }
@@ -142,6 +145,17 @@ function getGitURL(selectValue: number, style: string): string {
   }
 }
 
+function getDefaultNodePackageName(selectValue: number): string {
+  switch (selectValue) {
+    case TYPE_OF_APP.REACT:
+      return "flow-react-ts"
+    case TYPE_OF_APP.NEXT:
+      return "flow-next-ts"
+    default:
+      invalidProgramInput()
+  }
+}
+
 function selectTheNameOfTheApp() {
   appList.on("select", async (options) => {
     const isStyle = await isWantStyle()
@@ -157,7 +171,8 @@ function selectTheNameOfTheApp() {
       return process.exit(0)
     }
     const gitURL = getGitURL(options[0].value, style)
-    createApp(gitURL, nameOfApp)
+    const defaultNodePackageName = getDefaultNodePackageName(options[0].value)
+    createApp(gitURL, nameOfApp, defaultNodePackageName)
   })
 }
 
