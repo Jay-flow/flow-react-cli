@@ -25,8 +25,7 @@ const welcome = `
 ██║░░░░░███████╗╚█████╔╝░░╚██╔╝░╚██╔╝░░░░░░░██║░░██║███████╗██║░░██║╚█████╔╝░░░██║░░░░░░░░░╚█████╔╝███████╗██║
 ╚═╝░░░░░╚══════╝░╚════╝░░░░╚═╝░░░╚═╝░░░░░░░░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░░░░░░░░╚════╝░╚══════╝╚═╝
 `
-
-const list = selectShell({
+const selectShellStyle = {
   pointer: " ▸ ",
   pointerColor: "yellow",
   checked: " ◉  ",
@@ -37,7 +36,9 @@ const list = selectShell({
   multiSelect: false,
   inverse: true,
   prepend: true
-})
+}
+
+const appList = selectShell(selectShellStyle)
 
 function isValidateComponentNaming(name: string) {
   if (!name) {
@@ -111,7 +112,7 @@ function invalidProgramInput() {
 }
 
 function selectTheNameOfTheApp() {
-  list.on("select", async (options) => {
+  appList.on("select", async (options) => {
     shell.echo(chalk.yellow("Select the name of the app."))
     const appName = await nameTheApp()
     const nameOfApp = appName.value
@@ -131,6 +132,20 @@ function selectTheNameOfTheApp() {
   })
 }
 
+function cancelEventHandling() {
+  appList.on("cancel", (options: string) => {
+    shell.echo(`Operation has been canceled, ${options.length} option was selected.`)
+    process.exit(0)
+  })
+}
+
+function showSelectAppList() {
+  appList
+  .option(" React App (typescript) ", TYPE_OF_APP.REACT)
+  .option(" Next App (typescript) ", TYPE_OF_APP.NEXT)
+  .list()
+}
+
 const init = () => {
   program
     .version(pkg.version)
@@ -140,16 +155,9 @@ const init = () => {
       shell.echo(chalk.cyanBright(welcome))
       shell.echo(chalk.yellow("Select which boilerplate you want to generate from flow-react-cli."))
 
-      list
-        .option(" React App (typescript) ", TYPE_OF_APP.REACT)
-        .option(" Next App (typescript) ", TYPE_OF_APP.NEXT)
-        .list()
-
+      showSelectAppList()
       selectTheNameOfTheApp()
-      list.on("cancel", (options: string) => {
-        shell.echo(`Operation has been canceled, ${options.length} option was selected.`)
-        process.exit(0)
-      })
+      // cancelEventHandling()
     })
 }
 
