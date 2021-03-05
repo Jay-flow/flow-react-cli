@@ -2,9 +2,9 @@
 
 import program from "commander"
 import init from "./init"
-// import start from "./start"
+import page from "./page"
 
 init()
-// start()
+page()
 
 program.parse(process.argv)

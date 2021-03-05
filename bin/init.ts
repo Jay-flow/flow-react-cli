@@ -64,16 +64,12 @@ async function nameTheApp() {
   ])
 }
 
-
 async function selectStyle() {
   return inquirer.prompt([
     {
       name: "value",
       type: "list",
-      choices: [
-        TYPE_OF_STYLE.TAILWIND,
-        TYPE_OF_STYLE.STYLED_COMPONENTS,
-      ],
+      choices: [TYPE_OF_STYLE.TAILWIND, TYPE_OF_STYLE.STYLED_COMPONENTS],
       message: "Select the CSS you want: "
     }
   ])
@@ -106,10 +102,14 @@ function createApp(gitURL: string, nameOfApp: string, defaultNodePackageName: st
 function flowUp(nameOfApp: string, defaultNodePackageName: string) {
   const projectCleanupSpinner = ora("Project Cleanup...\n")
   projectCleanupSpinner.start()
-  
 
   setTimeout(() => {
-    shell.sed("-i", defaultNodePackageName, AppNameToNodePackageName(`${nameOfApp}`), `./${nameOfApp}/package.json`)
+    shell.sed(
+      "-i",
+      defaultNodePackageName,
+      AppNameToNodePackageName(`${nameOfApp}`),
+      `./${nameOfApp}/package.json`
+    )
     shell.rm("-rf", `${nameOfApp}/.git`)
     projectCleanupSpinner.stop()
 
@@ -130,7 +130,7 @@ function invalidProgramInput() {
 
 function getGitURL(selectValue: number, style: string): string {
   let branch = "main"
-  if(style === TYPE_OF_STYLE.STYLED_COMPONENTS) {
+  if (style === TYPE_OF_STYLE.STYLED_COMPONENTS) {
     branch = "styled-components"
   } else if (style === TYPE_OF_STYLE.TAILWIND) {
     branch = "tailwind-css"
@@ -160,7 +160,7 @@ function selectTheNameOfTheApp() {
   appList.on("select", async (options) => {
     const isStyle = await isWantStyle()
     let style = null
-    if(isStyle.value) {
+    if (isStyle.value) {
       const selectStyleLibrary = await selectStyle()
       style = selectStyleLibrary.value
     }
@@ -185,16 +185,16 @@ function cancelEventHandling() {
 
 function showSelectAppList() {
   appList
-  .option(" React App (typescript) ", TYPE_OF_APP.REACT)
-  .option(" Next App (typescript) ", TYPE_OF_APP.NEXT)
-  .list()
+    .option(" React App (typescript) ", TYPE_OF_APP.REACT)
+    .option(" Next App (typescript) ", TYPE_OF_APP.NEXT)
+    .list()
 }
 
 const init = () => {
   program
     .version(pkg.version)
     .command("init")
-    .description("Initialize Boilerplate for React.")
+    .description("Initialize boilerplate for React.")
     .action(() => {
       shell.echo(chalk.cyanBright(welcome))
       shell.echo(chalk.yellow("Select which boilerplate you want to generate from flow-react-cli."))

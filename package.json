@@ -1,6 +1,6 @@
 {
   "name": "flow-react-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Create React app & boilerplate",
   "bin": {
     "flow": "dist/bin/main.js"
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "dev:tsc": "tsc -w",
+    "watch": "tsc -w",
     "dev": "node ./dist/bin/main.js init",
     "build": "shx rm -rf dist/ && npm run tsc",
     "deploy": "npm run build && npm publish"
