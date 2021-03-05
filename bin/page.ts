@@ -3,6 +3,7 @@ import chalk from "chalk"
 import program from "commander"
 import ora from "ora"
 import fs from "fs"
+import { upperCamelize } from "../utils/functions"
 
 const page = () => {
   return program
