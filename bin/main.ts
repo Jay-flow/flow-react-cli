@@ -26,7 +26,7 @@ const checkPkgUpdate = () => {
     pkg,
     updateCheckInterval: 1000 * 60 * 60 * 24 // 1 day
   })
-  notifier.notify()
+  notifier.notify({isGlobal: true})
 }
 
 printWelcomeMessage()
