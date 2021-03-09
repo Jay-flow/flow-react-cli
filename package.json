@@ -1,11 +1,10 @@
 {
   "name": "flow-react-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Create React app & boilerplate",
   "bin": {
     "flow": "dist/bin/main.js"
   },
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
@@ -25,7 +24,6 @@
     "typescript"
   ],
   "dependencies": {
-    "boxen": "^4.2.0",
     "chalk": "^4.1.0",
     "commander": "^7.0.0",
     "inquirer": "^7.3.3",

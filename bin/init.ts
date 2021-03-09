@@ -7,8 +7,6 @@ import selectShell from "select-shell"
 import ora from "ora"
 import { AppNameToNodePackageName } from "../utils/functions"
 import fs from "fs"
-import updateNotifier from "update-notifier"
-import boxen from "boxen"
 
 enum TYPE_OF_APP {
   REACT = 1,
@@ -20,22 +18,7 @@ enum TYPE_OF_STYLE {
   STYLED_COMPONENTS = "styled-components"
 }
 
-const notifier = updateNotifier({
-  pkg,
-  updateCheckInterval: 1000 * 60 * 60 * 24 // 1 day
-})
 
-if (notifier.update)
-  shell.echo(chalk.blueBright(boxen(`Update available: ${notifier.update.latest}`, { padding: 1 })))
-
-const welcome = `
-███████╗██╗░░░░░░█████╗░░██╗░░░░░░░██╗░░░░░░██████╗░███████╗░█████╗░░█████╗░████████╗░░░░░░░█████╗░██╗░░░░░██╗
-██╔════╝██║░░░░░██╔══██╗░██║░░██╗░░██║░░░░░░██╔══██╗██╔════╝██╔══██╗██╔══██╗╚══██╔══╝░░░░░░██╔══██╗██║░░░░░██║
-█████╗░░██║░░░░░██║░░██║░╚██╗████╗██╔╝█████╗██████╔╝█████╗░░███████║██║░░╚═╝░░░██║░░░█████╗██║░░╚═╝██║░░░░░██║
-██╔══╝░░██║░░░░░██║░░██║░░████╔═████║░╚════╝██╔══██╗██╔══╝░░██╔══██║██║░░██╗░░░██║░░░╚════╝██║░░██╗██║░░░░░██║
-██║░░░░░███████╗╚█████╔╝░░╚██╔╝░╚██╔╝░░░░░░░██║░░██║███████╗██║░░██║╚█████╔╝░░░██║░░░░░░░░░╚█████╔╝███████╗██║
-╚═╝░░░░░╚══════╝░╚════╝░░░░╚═╝░░░╚═╝░░░░░░░░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝░╚════╝░░░░╚═╝░░░░░░░░░░╚════╝░╚══════╝╚═╝
-`
 const selectShellStyle = {
   pointer: " ▸ ",
   pointerColor: "yellow",
@@ -206,7 +189,6 @@ const init = () => {
     .command("init")
     .description("Initialize boilerplate for React.")
     .action(() => {
-      shell.echo(chalk.cyanBright(welcome))
       shell.echo(chalk.yellow("Select which boilerplate you want to generate from flow-react-cli."))
 
       showSelectAppList()
