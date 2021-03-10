@@ -78,9 +78,10 @@ async function isWantStyle() {
   ])
 }
 
-function createApp(gitURL: string, nameOfApp: string, defaultNodePackageName: string) {
+function createApp(selectApp: number, nameOfApp: string, defaultNodePackageName: string, style: string) {
   const gitDownSpinner = ora("Creating app: " + nameOfApp + "...\n")
   gitDownSpinner.start()
+  const gitURL = getGitURL(selectApp, style)
   shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
     gitDownSpinner.stop()
     if (code !== 0) {
@@ -88,11 +89,11 @@ function createApp(gitURL: string, nameOfApp: string, defaultNodePackageName: st
       shell.echo(chalk.cyanBright(`Program output: ${stdout}`))
       shell.echo(chalk.cyanBright(`Program stderr: ${stderr}`))
     }
-    flowUp(nameOfApp, defaultNodePackageName)
+    flowUp(selectApp, nameOfApp, defaultNodePackageName, style)
   })
 }
 
-function flowUp(nameOfApp: string, defaultNodePackageName: string) {
+function flowUp(selectApp:number, nameOfApp: string, defaultNodePackageName: string, style: string) {
   const projectCleanupSpinner = ora("Project Cleanup...\n")
   projectCleanupSpinner.start()
 
@@ -105,15 +106,20 @@ function flowUp(nameOfApp: string, defaultNodePackageName: string) {
     )
     shell.rm("-rf", `${nameOfApp}/.git`)
     projectCleanupSpinner.stop()
-
-    const npmInstallSpinner = ora("npm install...just a moment, please.\n").start()
     shell.cd(nameOfApp)
-    shell.exec("npm install")
-    npmInstallSpinner.stop()
-
+    shell.exec("flow update")
+    reinstallAutotprefixcer(selectApp, style)
     shell.echo(chalk.greenBright(nameOfApp + " created."))
     process.exit(0)
   }, 2000)
+}
+
+function reinstallAutotprefixcer(selectApp:number, style: string) {
+  if (style == TYPE_OF_STYLE.TAILWIND && selectApp == TYPE_OF_APP.REACT) {
+    const tailwindSpinner = ora("autotprefixcer setting for tailwindcss...\n").start()
+    shell.exec("npm install autoprefixer@^9.8.6")
+    tailwindSpinner.succeed()
+  }
 }
 
 function invalidProgramInput() {
@@ -163,9 +169,9 @@ function selectTheNameOfTheApp() {
     if (!isValidateComponentNaming(nameOfApp)) {
       return process.exit(0)
     }
-    const gitURL = getGitURL(options[0].value, style)
+    const selectApp = options[0].value
     const defaultNodePackageName = getDefaultNodePackageName(options[0].value)
-    createApp(gitURL, nameOfApp, defaultNodePackageName)
+    createApp(selectApp, nameOfApp, defaultNodePackageName, style)
   })
 }
 
