@@ -18,7 +18,6 @@ enum TYPE_OF_STYLE {
   STYLED_COMPONENTS = "styled-components"
 }
 
-
 const selectShellStyle = {
   pointer: " ▸ ",
   pointerColor: "yellow",
@@ -78,7 +77,12 @@ async function isWantStyle() {
   ])
 }
 
-function createApp(selectApp: number, nameOfApp: string, defaultNodePackageName: string, style: string) {
+function createApp(
+  selectApp: number,
+  nameOfApp: string,
+  defaultNodePackageName: string,
+  style: string
+) {
   const gitDownSpinner = ora("Creating app: " + nameOfApp + "...\n")
   gitDownSpinner.start()
   const gitURL = getGitURL(selectApp, style)
@@ -93,7 +97,12 @@ function createApp(selectApp: number, nameOfApp: string, defaultNodePackageName:
   })
 }
 
-function flowUp(selectApp:number, nameOfApp: string, defaultNodePackageName: string, style: string) {
+function flowUp(
+  selectApp: number,
+  nameOfApp: string,
+  defaultNodePackageName: string,
+  style: string
+) {
   const projectCleanupSpinner = ora("Project Cleanup...\n")
   projectCleanupSpinner.start()
 
@@ -114,7 +123,7 @@ function flowUp(selectApp:number, nameOfApp: string, defaultNodePackageName: str
   }, 2000)
 }
 
-function reinstallAutotprefixcer(selectApp:number, style: string) {
+function reinstallAutotprefixcer(selectApp: number, style: string) {
   if (style == TYPE_OF_STYLE.TAILWIND && selectApp == TYPE_OF_APP.REACT) {
     const tailwindSpinner = ora("autotprefixcer setting for tailwindcss...\n").start()
     shell.exec("npm install autoprefixer@^9.8.6")
@@ -193,7 +202,7 @@ const init = () => {
   program
     .version(pkg.version)
     .command("init")
-    .description("Initialize boilerplate for React.")
+    .description("Initialize the React or Next.js project, including the Boilerplate.")
     .action(() => {
       shell.echo(chalk.yellow("Select which boilerplate you want to generate from flow-react-cli."))
 

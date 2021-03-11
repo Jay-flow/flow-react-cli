@@ -5,7 +5,7 @@ import ora from "ora"
 const update = () => {
   program
     .command("update")
-    .description("Update packages.")
+    .description("Use the npm-check-updates package to update the package in the project.")
     .action(() => {
       const updateCheckSpinner = ora("Check package updates...\n").start()
       try {

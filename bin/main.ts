@@ -17,17 +17,19 @@ const printWelcomeMessage = () => {
   shell.echo(chalk.cyanBright(welcome))
 }
 
-
 const checkPkgUpdate = () => {
   const notifier = updateNotifier({
     pkg,
     updateCheckInterval: 1000 * 60 * 60 * 24 // 1 day
   })
-  notifier.notify({isGlobal: true})
+  notifier.notify({ isGlobal: true })
 }
 
 printWelcomeMessage()
 checkPkgUpdate()
+
+program.name("flow").usage("[command]")
+
 init()
 update()
 page()
