@@ -76,6 +76,6 @@ Please upload the idea or bug for package function development on the [issue](ht
 
 I like all discussions related to development because I am in a learning position.
 
-If you have any further questions or need to contact me, please email kimpetro153@gmail.com.
+If you have any further questions or need to contact me, please email jay.flow.dev@gmail.com.
 
 **Thank you for using my package and for your interest.**
