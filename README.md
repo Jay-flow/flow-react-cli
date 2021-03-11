@@ -8,11 +8,11 @@
 
 # Documentation
 
-- [About flow-react-cli](https://github.com/Jay-flow/flow-react-cli#)
-- [Installation](https://flutter.dev/docs)
-- [Usage](https://github.com/flutter/flutter/wiki)
-- [Preview](https://github.com/flutter/flutter/blob/master/CONTRIBUTING.md)
-- [Contributing to flow-react-cli](https://github.com/flutter/flutter/wiki)
+- [About flow-react-cli](https://github.com/Jay-flow/flow-react-cli#about-flow-react-cli)
+- [Installation](https://github.com/Jay-flow/flow-react-cli#installation)
+- [Usage](https://github.com/Jay-flow/flow-react-cli#usage)
+- [Preview](https://github.com/Jay-flow/flow-react-cli#preview)
+- [Contributing to flow-react-cli](https://github.com/Jay-flow/flow-react-cli#contributing-to-flow-react-cli)
 
 # About flow-react-cli
 
@@ -35,7 +35,7 @@ The two main features of this CLI program are as follows:
 > 3.  You can create any project when you create a component. This means that you can create components, even if they are not projects created using that package.
 > 4.  When creating a project or component, there is no restriction on
 
-> flow-react-cli updates packages for dependencies using the [npm-check-updates]() package when you create or update a project.
+> flow-react-cli updates packages for dependencies using the [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) package when you create or update a project.
 
 # Installation
 
@@ -63,3 +63,17 @@ Commands:
 ![preview](./design/preview.gif)
 
 # Contributing to flow-react-cli
+
+I am working hard to develop this package with affection.
+I check all the requests and issues.
+I'm not a JavaScript developer. There are many parts of this package that are lacking.
+
+This package needs your help.
+
+please write about the code and if you have a better code, please revise it and contribute.
+
+It would be very helpful if you write down the development of functions or bugs on the [issue](https://github.com/Jay-flow/flow-react-cli/issues).
+
+I like all discussions related to development because I am in a learning position.
+
+If you have any further questions or need to contact me, please email kimpetro153@gmail.com.
