@@ -70,10 +70,12 @@ I'm not a JavaScript developer. There are many parts of this package that are la
 
 This package needs your help.
 
-please write about the code and if you have a better code, please revise it and contribute.
+Please write about the code and if you have a better code, please revise it and contribute.
 
-It would be very helpful if you write down the development of functions or bugs on the [issue](https://github.com/Jay-flow/flow-react-cli/issues).
+Please upload the idea or bug for package function development on the [issue](https://github.com/Jay-flow/flow-react-cli/issues).
 
 I like all discussions related to development because I am in a learning position.
 
 If you have any further questions or need to contact me, please email kimpetro153@gmail.com.
+
+**Thank you for using my package and for your interest.**
