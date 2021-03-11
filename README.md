@@ -6,6 +6,16 @@
 
 ![logo](./design/logo.jpg)
 
+# Documentation
+
+- [About flow-react-cli](https://github.com/Jay-flow/flow-react-cli#)
+- [Installation](https://flutter.dev/docs)
+- [Usage](https://github.com/flutter/flutter/wiki)
+- [Preview](https://github.com/flutter/flutter/blob/master/CONTRIBUTING.md)
+- [Contributing to flow-react-cli](https://github.com/flutter/flutter/wiki)
+
+# About flow-react-cli
+
 This CLI program is a package that creates the boilerplate and components needed to develop React.
 Using flow-react-cli, you can increase the productivity of React.
 
@@ -50,4 +60,6 @@ Commands:
 
 # Preview
 
-![interface](./design/interface.png)
+![preview](./design/preview.gif)
+
+# Contributing to flow-react-cli
