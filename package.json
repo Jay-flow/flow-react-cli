@@ -1,6 +1,6 @@
 {
   "name": "flow-react-cli",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "Create React app & boilerplate",
   "bin": {
     "flow": "dist/bin/main.js"
@@ -21,7 +21,9 @@
     "cli",
     "template",
     "boilerplate",
-    "typescript"
+    "typescript",
+    "eslint",
+    "prettier"
   ],
   "dependencies": {
     "chalk": "^4.1.0",
