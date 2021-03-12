@@ -7,40 +7,21 @@ import selectShell from "select-shell"
 import ora from "ora"
 import { AppNameToNodePackageName } from "../utils/functions"
 import fs from "fs"
+import Selection from "../model/Selection"
+import { TYPE_OF_APP, TYPE_OF_STYLE } from "../model/Type"
+import { selectShellStyle } from "../model/SetUp"
 
-enum TYPE_OF_APP {
-  REACT = 1,
-  NEXT = 2
-}
-
-enum TYPE_OF_STYLE {
-  TAILWIND = "Tailwind CSS",
-  STYLED_COMPONENTS = "styled-components"
-}
-
-const selectShellStyle = {
-  pointer: " ▸ ",
-  pointerColor: "yellow",
-  checked: " ◉  ",
-  unchecked: " ◎  ",
-  checkedColor: "blue",
-  msgCancel: "No selected options!",
-  msgCancelColor: "orange",
-  multiSelect: false,
-  inverse: true,
-  prepend: true
-}
-
+const selection = new Selection()
 const appList = selectShell(selectShellStyle)
 
-function isValidateComponentNaming(name: string) {
-  if (!name) {
+function isValidateComponentNaming() {
+  if (!selection.appName) {
     shell.echo(chalk.redBright("Please provide name of your app."))
     return false
-  } else if (!/^[a-z0-9\-_]+$/i.test(name)) {
+  } else if (!/^[a-z0-9\-_]+$/i.test(selection.appName)) {
     shell.echo(chalk.redBright("App name cannot contain special symbols."))
     return false
-  } else if (fs.existsSync(`./${name}`)) {
+  } else if (fs.existsSync(`./${selection.appName}`)) {
     shell.echo(chalk.redBright("App name with the same name already exists."))
     return false
   }
@@ -77,32 +58,26 @@ async function isWantStyle() {
   ])
 }
 
-function createApp(
-  selectApp: number,
-  nameOfApp: string,
-  defaultNodePackageName: string,
-  style: string
-) {
-  const gitDownSpinner = ora("Creating app: " + nameOfApp + "...\n")
+function createApp() {
+  const gitDownSpinner = ora("Creating app: " + selection.appName + "...\n")
   gitDownSpinner.start()
-  const gitURL = getGitURL(selectApp, style)
-  shell.exec(`git clone ${gitURL} ${nameOfApp}`, (code: number, stdout: string, stderr: string) => {
-    gitDownSpinner.stop()
-    if (code !== 0) {
-      shell.echo(chalk.cyanBright(`code: ${code}`))
-      shell.echo(chalk.cyanBright(`Program output: ${stdout}`))
-      shell.echo(chalk.cyanBright(`Program stderr: ${stderr}`))
+  const gitURL = getGitURL()
+  shell.exec(
+    `git clone ${gitURL} ${selection.appName}`,
+    (code: number, stdout: string, stderr: string) => {
+      gitDownSpinner.stop()
+      if (code !== 0) {
+        shell.echo(chalk.cyanBright(`code: ${code}`))
+        shell.echo(chalk.cyanBright(`Program output: ${stdout}`))
+        shell.echo(chalk.cyanBright(`Program stderr: ${stderr}`))
+      }
+      flowUp()
     }
-    flowUp(selectApp, nameOfApp, defaultNodePackageName, style)
-  })
+  )
 }
 
-function flowUp(
-  selectApp: number,
-  nameOfApp: string,
-  defaultNodePackageName: string,
-  style: string
-) {
+function flowUp() {
+  const defaultNodePackageName = getDefaultNodePackageName()
   const projectCleanupSpinner = ora("Project Cleanup...\n")
   projectCleanupSpinner.start()
 
@@ -110,21 +85,21 @@ function flowUp(
     shell.sed(
       "-i",
       defaultNodePackageName,
-      AppNameToNodePackageName(`${nameOfApp}`),
-      `./${nameOfApp}/package.json`
+      AppNameToNodePackageName(`${selection.appName}`),
+      `./${selection.appName}/package.json`
     )
-    shell.rm("-rf", `${nameOfApp}/.git`)
+    shell.rm("-rf", `${selection.appName}/.git`)
     projectCleanupSpinner.stop()
-    shell.cd(nameOfApp)
+    shell.cd(selection.appName)
     shell.exec("flow update")
-    reinstallAutotprefixcer(selectApp, style)
-    shell.echo(chalk.greenBright(nameOfApp + " created."))
+    reinstallAutotprefixcer()
+    shell.echo(chalk.greenBright(selection.appName + " created."))
     process.exit(0)
   }, 2000)
 }
 
-function reinstallAutotprefixcer(selectApp: number, style: string) {
-  if (style == TYPE_OF_STYLE.TAILWIND && selectApp == TYPE_OF_APP.REACT) {
+function reinstallAutotprefixcer() {
+  if (selection.styleLibrary == TYPE_OF_STYLE.TAILWIND && selection.appType == TYPE_OF_APP.REACT) {
     const tailwindSpinner = ora("autotprefixcer setting for tailwindcss...\n").start()
     shell.exec("npm install autoprefixer@^9.8.6")
     tailwindSpinner.succeed()
@@ -136,14 +111,14 @@ function invalidProgramInput() {
   process.exit(0)
 }
 
-function getGitURL(selectValue: number, style: string): string {
+function getGitURL(): string {
   let branch = "main"
-  if (style === TYPE_OF_STYLE.STYLED_COMPONENTS) {
+  if (selection.styleLibrary === TYPE_OF_STYLE.STYLED_COMPONENTS) {
     branch = "styled-components"
-  } else if (style === TYPE_OF_STYLE.TAILWIND) {
+  } else if (selection.styleLibrary === TYPE_OF_STYLE.TAILWIND) {
     branch = "tailwind-css"
   }
-  switch (selectValue) {
+  switch (selection.appType) {
     case TYPE_OF_APP.REACT:
       return `-b ${branch} https://github.com/Jay-flow/flow-react-ts.git`
     case TYPE_OF_APP.NEXT:
@@ -153,8 +128,8 @@ function getGitURL(selectValue: number, style: string): string {
   }
 }
 
-function getDefaultNodePackageName(selectValue: number): string {
-  switch (selectValue) {
+function getDefaultNodePackageName(): string {
+  switch (selection.appType) {
     case TYPE_OF_APP.REACT:
       return "flow-react-ts"
     case TYPE_OF_APP.NEXT:
@@ -164,23 +139,25 @@ function getDefaultNodePackageName(selectValue: number): string {
   }
 }
 
-function selectTheNameOfTheApp() {
-  appList.on("select", async (options) => {
-    const isStyle = await isWantStyle()
-    let style = null
-    if (isStyle.value) {
-      const selectStyleLibrary = await selectStyle()
-      style = selectStyleLibrary.value
-    }
+async function selectCSSLibrary() {
+  const isStyle = await isWantStyle()
+  if (isStyle.value) {
+    const selectStyleLibrary = await selectStyle()
+    selection.styleLibrary = selectStyleLibrary.value
+  }
+}
+
+function mainProcess() {
+  appList.on("select", async (options: Array<any>) => {
+    await selectCSSLibrary()
     shell.echo(chalk.yellow("Select the name of the app."))
     const appName = await nameTheApp()
-    const nameOfApp = appName.value
-    if (!isValidateComponentNaming(nameOfApp)) {
+    selection.appName = appName.value
+    if (!isValidateComponentNaming()) {
       return process.exit(0)
     }
-    const selectApp = options[0].value
-    const defaultNodePackageName = getDefaultNodePackageName(options[0].value)
-    createApp(selectApp, nameOfApp, defaultNodePackageName, style)
+    selection.appType = options[0].value
+    createApp()
   })
 }
 
@@ -191,7 +168,7 @@ function cancelEventHandling() {
   })
 }
 
-function showSelectAppList() {
+function setAppList() {
   appList
     .option(" React App (typescript) ", TYPE_OF_APP.REACT)
     .option(" Next App (typescript) ", TYPE_OF_APP.NEXT)
@@ -205,9 +182,8 @@ const init = () => {
     .description("Initialize the React or Next.js project, including the Boilerplate.")
     .action(() => {
       shell.echo(chalk.yellow("Select which boilerplate you want to generate from flow-react-cli."))
-
-      showSelectAppList()
-      selectTheNameOfTheApp()
+      setAppList()
+      mainProcess()
       cancelEventHandling()
     })
 }
