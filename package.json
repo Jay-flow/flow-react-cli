@@ -1,6 +1,6 @@
 {
   "name": "flow-react-cli",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "Create React app & boilerplate",
   "bin": {
     "flow": "dist/bin/main.js"
@@ -49,8 +49,5 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jay-flow/flow-react-cli.git"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }
