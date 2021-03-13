@@ -18,10 +18,7 @@ const printWelcomeMessage = () => {
 }
 
 const checkPkgUpdate = () => {
-  const notifier = updateNotifier({
-    pkg,
-    updateCheckInterval: 1000 * 60 * 60 * 24 // 1 day
-  })
+  const notifier = updateNotifier({ pkg })
   notifier.notify({ isGlobal: true })
 }
 
