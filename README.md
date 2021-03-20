@@ -21,7 +21,7 @@ Using flow-react-cli, you can increase the productivity of React.
 
 The two main features of this CLI program are as follows:
 
-1. Create a React or Next.js project that has completed the installation and setup of the Typescip, Eslint, Pretty, and CSS libraries (styled-components or Tailwind CSS).
+1. Create a React or Next.js project that has completed the installation and setup of the Typescip, EsLint, Prettier, and CSS libraries (styled-components or Tailwind CSS).
 2. When you create a functional component page, you can create a page where the boilerplate was created.
 
 ## 📢 Notes
@@ -61,6 +61,11 @@ Commands:
 ## Preview
 
 ![preview](./design/preview.gif)
+
+## Patch Notes (Version 1.1.x)
+
+When entering the `flow init` command, you can create an empty Node project that contains the Boilerplate of TypeScript, EsLint, and Prettier.
+
 
 ## Contributing to flow-react-cli
 
