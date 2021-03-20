@@ -170,8 +170,8 @@ function cancelEventHandling() {
 
 function setAppList() {
   appList
-    .option(" React App (typescript) ", TYPE_OF_APP.REACT)
-    .option(" Next App (typescript) ", TYPE_OF_APP.NEXT)
+    .option("React App (typescript) ", TYPE_OF_APP.REACT)
+    .option("Next.js App (typescript) ", TYPE_OF_APP.NEXT)
     .list()
 }
 
