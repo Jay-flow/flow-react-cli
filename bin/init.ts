@@ -123,6 +123,8 @@ function getGitURL(): string {
       return `-b ${branch} https://github.com/Jay-flow/flow-react-ts.git`
     case TYPE_OF_APP.NEXT:
       return `-b ${branch} https://github.com/Jay-flow/flow-next-ts.git`
+    case TYPE_OF_APP.NODE:
+      return `-b main https://github.com/Jay-flow/flow-node-ts.git`
     default:
       invalidProgramInput()
   }
@@ -134,6 +136,8 @@ function getDefaultNodePackageName(): string {
       return "flow-react-ts"
     case TYPE_OF_APP.NEXT:
       return "flow-next-ts"
+    case TYPE_OF_APP.NODE:
+      return "flow-node-ts"
     default:
       invalidProgramInput()
   }
@@ -149,14 +153,16 @@ async function selectCSSLibrary() {
 
 function mainProcess() {
   appList.on("select", async (options: Array<any>) => {
-    await selectCSSLibrary()
+    selection.appType = options[0].value
+    if (selection.appType != TYPE_OF_APP.NODE) {
+      await selectCSSLibrary()
+    }
     shell.echo(chalk.yellow("Select the name of the app."))
     const appName = await nameTheApp()
     selection.appName = appName.value
     if (!isValidateComponentNaming()) {
       return process.exit(0)
     }
-    selection.appType = options[0].value
     createApp()
   })
 }
@@ -172,6 +178,7 @@ function setAppList() {
   appList
     .option("React App (typescript) ", TYPE_OF_APP.REACT)
     .option("Next.js App (typescript) ", TYPE_OF_APP.NEXT)
+    .option("Empty Node App (typescript) ", TYPE_OF_APP.NODE)
     .list()
 }
 
@@ -179,7 +186,7 @@ const init = () => {
   program
     .version(pkg.version)
     .command("init")
-    .description("Initialize the React or Next.js project, including the Boilerplate.")
+    .description("Initialize the React, Next.js or Node project, including the Boilerplate.")
     .action(() => {
       shell.echo(chalk.yellow("Select which boilerplate you want to generate from flow-react-cli."))
       setAppList()
