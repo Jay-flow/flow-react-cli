@@ -34,7 +34,7 @@ const page = () => {
     .command("page <fileName> <filePath>")
     .description("Generate page(screen) component.")
     .action(async (fileName, filePath) => {
-      const absolutePath = path.resolve(filePath) + `/${fileName}.tsx`
+      const absolutePath = `${path.resolve(filePath)}/${fileName}.tsx`
       const spinner = ora("Creating page component...")
       spinner.start()
       if (isExistFile(absolutePath, spinner)) {
