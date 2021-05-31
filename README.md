@@ -66,7 +66,6 @@ Commands:
 
 When entering the `flow init` command, you can create an empty Node project that contains the Boilerplate of TypeScript, EsLint, and Prettier.
 
-
 ## Contributing to flow-react-cli
 
 I am working hard to develop this package with affection.
@@ -84,3 +83,5 @@ I like all discussions related to development because I am in a learning positio
 If you have any further questions or need to contact me, please email jay.flow.dev@gmail.com.
 
 **Thank you for using my package and for your interest.**
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/jayflow)
